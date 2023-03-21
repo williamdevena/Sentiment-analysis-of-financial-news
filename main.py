@@ -1,11 +1,14 @@
 import pandas as pd
 
+from src import data_analysis, data_processing
 from utils import costants
 
 
 def main():
-    data = pd.read_csv(costants.CSV_PATH, sep="|", encoding='latin-1')
+    data = data_processing.read_ds()
     print(data)
+    tot_words, counts_words = data_analysis.calculate_stats_words(data)
+    print(len(tot_words), counts_words[:10])
 
     ## RED DATA
 
