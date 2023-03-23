@@ -1,3 +1,5 @@
+import logging
+
 import pandas as pd
 from nltk.sentiment import SentimentIntensityAnalyzer
 
@@ -6,6 +8,18 @@ from utils import costants
 
 
 def main():
+
+    ## LOGGING SETUP
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(message)s",
+        handlers=[
+            logging.FileHandler("project_logs/assignment.log"),
+            logging.StreamHandler()
+        ]
+    )
+
+
     #train, test = data_processing.read_ds()
     #print(data)
 
@@ -38,12 +52,13 @@ def main():
     X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data)
     #print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
 
-    nb_score = baselines.train_and_test_naive_bayes(X_train=X_train,
-                                                    X_test=X_test,
-                                                    y_train=y_train,
-                                                    y_test=y_test)
+    baselines.naive_bayes_classifier(X_train=X_train,
+                                    X_test=X_test,
+                                    y_train=y_train,
+                                    y_test=y_test,
+                                    path_conf_matrix="./nb_conf_matrix")
 
-    print(nb_score)
+    #print(nb_score)
 
 
 
