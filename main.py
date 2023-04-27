@@ -3,7 +3,8 @@ import logging
 import pandas as pd
 from nltk.sentiment import SentimentIntensityAnalyzer
 
-from src import baselines, data_analysis, data_processing
+from src import (baselines, data_analysis, data_processing,
+                 hugging_face_pipelines)
 from utils import costants
 
 
@@ -48,7 +49,7 @@ def main():
 
 
 
-    data = data_processing.read_ds()
+    #data = data_processing.read_ds()
     # X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data)
     # #print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
 
@@ -58,10 +59,32 @@ def main():
     #                                 y_test=y_test,
     #                                 path_conf_matrix="./nb_conf_matrix")
 
-    baselines.grid_search_tuning_nb(data=data)
+    # baselines.grid_search_tuning_nb(data=data)
 
     #print(nb_score)
 
+
+
+
+    # from transformers import pipeline
+
+    # data = data_processing.read_ds()
+    # pipe = pipeline("text-classification")
+    # #print(pipe("This restaurant is awesome"))
+
+    # y_pred = pipe(list(data["text"]))
+    # #y_pred = [pred['score'] for pred in y_pred]
+    # print(y_pred)
+
+
+
+    data = data_processing.read_ds()
+    X_train, X_test, y_train, y_test = data_processing.build_train_test_dataset(data=data)
+    acc = hugging_face_pipelines.test_hugging_face_pipeline(model="ahmedrachid/FinancialBERT-Sentiment-Analysis",
+                                                            X_test=X_test[:10],
+                                                            y_test=y_test[:10],
+                                                            labelling_function=hugging_face_pipelines.labelling_function_financial_bert)
+    print(acc)
 
 
 

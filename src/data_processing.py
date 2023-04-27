@@ -5,6 +5,22 @@ from sklearn.model_selection import train_test_split
 from utils import costants
 
 
+def build_train_test_dataset(data):
+    """_summary_
+
+    Args:
+        data (_type_): _description_
+    """
+    all_text = data['text']
+    labels = data["sentiment"]
+    #print(all_text_vectorized[0].shape)
+
+    X_train, X_test, y_train, y_test = train_test_split(all_text, labels, test_size=0.2, random_state=42, shuffle=True)
+
+    return X_train, X_test, y_train, y_test
+
+
+
 def build_train_test_count_vectorized(data, max_df, min_df):
     """
 
