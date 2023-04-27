@@ -49,14 +49,16 @@ def main():
 
 
     data = data_processing.read_ds()
-    X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data)
-    #print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
+    # X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data)
+    # #print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
 
-    baselines.naive_bayes_classifier(X_train=X_train,
-                                    X_test=X_test,
-                                    y_train=y_train,
-                                    y_test=y_test,
-                                    path_conf_matrix="./nb_conf_matrix")
+    # baselines.naive_bayes_classifier(X_train=X_train,
+    #                                 X_test=X_test,
+    #                                 y_train=y_train,
+    #                                 y_test=y_test,
+    #                                 path_conf_matrix="./nb_conf_matrix")
+
+    baselines.grid_search_tuning_nb(data=data)
 
     #print(nb_score)
 

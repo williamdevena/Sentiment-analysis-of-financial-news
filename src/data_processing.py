@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from utils import costants
 
 
-def build_train_test_count_vectorized(data):
+def build_train_test_count_vectorized(data, max_df, min_df):
     """
 
 
@@ -23,7 +23,7 @@ def build_train_test_count_vectorized(data):
 
     #Each row in matrix M contains the frequency of tokens(words) in the document D(i)
 
-    count_vectorizer = CountVectorizer(max_df=0.90 ,min_df=2 , max_features=None, stop_words='english')
+    count_vectorizer = CountVectorizer(max_df=max_df, min_df=min_df, max_features=None, stop_words='english')
     all_text_vectorized = count_vectorizer.fit_transform(all_text) # tokenize and build vocabulary
     #print(all_text_vectorized.shape)
     labels = data["sentiment"]
