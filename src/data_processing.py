@@ -66,9 +66,9 @@ def read_ds_twitter():
         dataset (20% of the original). Has two
         columns (sentiment and text)
     """
-    twitter_data = pd.read_csv(costants.TWITTER_CSV_PATH, sep=",", names=['blabla', 'sentiment', 'text'])
+    twitter_data = pd.read_csv(costants.TWITTER_CSV_PATH, sep=",", names=['_', 'sentiment', 'text'])
     twitter_data['sentiment'] = twitter_data['sentiment'].replace({'Neutral':0, 'Positive':1, 'Negative':-1})
-    twitter_data = twitter_data.drop('blabla', axis='columns')
+    twitter_data = twitter_data.drop('_', axis='columns')
 
     #train, test = train_test_split(data, test_size=0.2, random_state=42, shuffle=True)
 
