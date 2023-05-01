@@ -21,7 +21,7 @@ def build_train_test_dataset(data):
 
 
 
-def build_train_test_count_vectorized(data, max_df, min_df):
+def build_train_test_count_vectorized(data, max_df=0.9, min_df=2):
     """
 
 
@@ -52,8 +52,7 @@ def build_train_test_count_vectorized(data, max_df, min_df):
 
 
 
-
-def read_ds():
+def read_ds_twitter():
     """
     Reads the dataset (in the form of a csv)
 
@@ -67,12 +66,38 @@ def read_ds():
         dataset (20% of the original). Has two
         columns (sentiment and text)
     """
+    twitter_data = pd.read_csv(costants.TWITTER_CSV_PATH, sep=",", names=['blabla', 'sentiment', 'text'])
+    twitter_data['sentiment'] = twitter_data['sentiment'].replace({'Neutral':0, 'Positive':1, 'Negative':-1})
+    twitter_data = twitter_data.drop('blabla', axis='columns')
+
+    #train, test = train_test_split(data, test_size=0.2, random_state=42, shuffle=True)
+
+    return twitter_data
+
+
+
+
+
+
+def read_ds():
+    """
+    Reads the dataset (in the form of a csv)
+
+    Args: None
+
+    Returns:
+        - data (pd.Dataframe): financial news data
+    """
     data = pd.read_csv(costants.CSV_PATH, sep=",", names=['sentiment', 'text'], encoding='latin-1')
     data['sentiment'] = data['sentiment'].replace({'neutral':0, 'positive':1, 'negative':-1})
 
     #train, test = train_test_split(data, test_size=0.2, random_state=42, shuffle=True)
 
     return data
+
+
+
+
 
 
 

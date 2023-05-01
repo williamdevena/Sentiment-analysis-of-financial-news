@@ -21,12 +21,24 @@ def main():
     )
 
 
-    #train, test = data_processing.read_ds()
-    #print(data)
 
-    ## STATISTICS DATASET
+    # STATISTICS DATASET
+    # data = data_processing.read_ds()
     # tot_words, counts_words = data_analysis.calculate_stats_words(data)
     # print(len(tot_words), counts_words[:10])
+
+    # # STATISTICS TWITTER DATA
+    # twitter_data = data_processing.read_ds_twitter()
+    # tot_words, counts_words = data_analysis.calculate_stats_words(twitter_data)
+    # print(len(tot_words), counts_words[:10])
+
+
+    ## COMPARISON DATASETS
+    # financial_data = data_processing.read_ds()
+    # twitter_data = data_processing.read_ds_twitter()
+    # exclusive_words_financial, exclusive_words_twitter = data_analysis.compare_datasets(financial_data, twitter_data)
+    # print(exclusive_words_financial)
+    # print(len(exclusive_words_financial), len(exclusive_words_twitter))
 
 
 
@@ -49,42 +61,56 @@ def main():
 
 
 
-    #data = data_processing.read_ds()
-    # X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data)
-    # #print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
 
-    # baselines.naive_bayes_classifier(X_train=X_train,
-    #                                 X_test=X_test,
-    #                                 y_train=y_train,
-    #                                 y_test=y_test,
-    #                                 path_conf_matrix="./nb_conf_matrix")
 
+    #### GRID-SEARCH HYP. TUNING OF NAIVE-BAYES
+    # data = data_processing.read_ds()
     # baselines.grid_search_tuning_nb(data=data)
 
-    #print(nb_score)
 
 
 
 
-    # from transformers import pipeline
-
+    ### TEST HUGGING FACE PIPELINES
     # data = data_processing.read_ds()
-    # pipe = pipeline("text-classification")
-    # #print(pipe("This restaurant is awesome"))
+    # X_train, X_test, y_train, y_test = data_processing.build_train_test_dataset(data=data)
+    # acc = hugging_face_pipelines.test_hugging_face_pipeline(#model="ahmedrachid/FinancialBERT-Sentiment-Analysis",
+    #                                                         model="cardiffnlp/twitter-roberta-base-sentiment-latest",
+    #                                                         X_test=X_test[:10],
+    #                                                         y_test=y_test[:10],
+    #                                                         labelling_function=hugging_face_pipelines.labelling_function_twitter_roberta)
+    # print(acc)
 
-    # y_pred = pipe(list(data["text"]))
-    # #y_pred = [pred['score'] for pred in y_pred]
-    # print(y_pred)
 
 
 
+
+
+    # ### BASELINESS
     data = data_processing.read_ds()
+
+    # ### SVM ON TF-IDF
     X_train, X_test, y_train, y_test = data_processing.build_train_test_dataset(data=data)
-    acc = hugging_face_pipelines.test_hugging_face_pipeline(model="ahmedrachid/FinancialBERT-Sentiment-Analysis",
-                                                            X_test=X_test[:10],
-                                                            y_test=y_test[:10],
-                                                            labelling_function=hugging_face_pipelines.labelling_function_financial_bert)
-    print(acc)
+    baselines.svm_tf_idf(X_train=X_train,
+                         X_test=X_test,
+                         y_train=y_train,
+                         y_test=y_test,
+                         path_conf_matrix="./plots/conf_matrix/svm_tf_idf/svm")
+
+    # ### NAIVE BAYES
+    X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data,
+                                                                                         max_df=0.1,
+                                                                                         min_df=3)
+    baselines.naive_bayes_classifier(X_train=X_train,
+                                    X_test=X_test,
+                                    y_train=y_train,
+                                    y_test=y_test,
+                                    path_conf_matrix="./plots/conf_matrix/nb/best_nb_2")
+
+
+
+
+
 
 
 

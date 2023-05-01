@@ -69,13 +69,34 @@ def calculate_stats_words(ds):
         the world in the ds (with repetitions)
     """
     list_tot_words = []
-    for text in ds['text']:
+    for text in ds['text'].dropna():
+
         list_tot_words += nltk.word_tokenize(text)
 
     counts_words = np.unique(list_tot_words, return_counts=True)
     counts_words = sorted(list(zip(*counts_words)), key=lambda x: x[1], reverse=True)
 
-    return list_tot_words, counts_words
+    return list(set(list_tot_words)), counts_words
+
+
+
+
+def compare_datasets(ds_1, ds_2):
+    """_summary_
+
+    Args:
+        ds_text_1 (_type_): _description_
+        ds_text_2 (_type_): _description_
+    """
+    words = set(nltk.corpus.words.words())
+    tot_words_1, counts_words_1 = calculate_stats_words(ds_1)
+    tot_words_2, counts_words_2 = calculate_stats_words(ds_2)
+    #print(tot_words_1)
+    exclusive_words_1 = [word for word in tot_words_1 if ((word not in tot_words_2) and (word in words))]
+    #print(exclusive_words_1)
+    exclusive_words_2 = [word for word in tot_words_2 if ((word not in tot_words_1) and (word in words))]
+
+    return exclusive_words_1, exclusive_words_2
 
 
 

@@ -9,10 +9,6 @@ def test_hugging_face_pipeline(model, X_test, y_test, labelling_function, device
     y_pred = pipe(list(X_test))
     y_pred = [pred['label'] for pred in y_pred]
     y_pred = labelling_function(y_pred)
-
-    #print(np.unique(y_pred, return_counts=True))
-    #print(list(y_test))
-
     accuracy = sum(a_ == b_ for a_, b_ in zip(y_pred, y_test))/len(y_test)
 
     return accuracy
