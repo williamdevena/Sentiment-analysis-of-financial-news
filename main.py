@@ -4,8 +4,8 @@ import os
 import pandas as pd
 from nltk.sentiment import SentimentIntensityAnalyzer
 
-from src import (baselines, data_analysis, data_processing,
-                 hugging_face_pipelines)
+from models import transformers_pipelines
+from src import baselines, data_analysis, data_processing, pytorch_dataset
 from utils import costants
 
 
@@ -73,30 +73,47 @@ def main():
 
 
 
+    # ### CODE TO SAVE DIVIDED TRAIN AND TEST (FOR PYTORCH DS)
+    # print(X_train.index, y_train.index)
+    # #print(pd.merge(X_train, y_train, left_index=True, right_index=True))
+    # train = pd.merge(X_train, y_train, left_index=True, right_index=True)
+    # test = pd.merge(X_test, y_test, left_index=True, right_index=True)
+
+    # train.to_csv("./train.csv")
+    # test.to_csv("./test.csv")
+
+    # print(train.shape, test.shape)
+
+
+
 
 
     ### TEST HUGGING FACE PIPELINES
-    data = data_processing.read_ds()
-    X_train, X_test, y_train, y_test = data_processing.build_train_test_dataset(data=data)
-
-    ## TWITTER ROBERTA
-    hugging_face_pipelines.test_hugging_face_pipeline(model="cardiffnlp/twitter-roberta-base-sentiment-latest",
-                                                    X_test=X_test,
-                                                    y_test=y_test,
-                                                    path_conf_matrix="./plots/conf_matrix/hug_face_pipelines/twitter-roberta"
-                                                    )
-
-    ## FIN-BERT
-    hugging_face_pipelines.test_hugging_face_pipeline(model="ahmedrachid/FinancialBERT-Sentiment-Analysis",
-                                                    X_test=X_test,
-                                                    y_test=y_test,
-                                                    path_conf_matrix="./plots/conf_matrix/hug_face_pipelines/finBERT"
-                                                    )
+    # data = data_processing.read_ds()
+    # X_train, X_test, y_train, y_test = data_processing.build_train_test_dataset(data=data)
 
 
+    # ## TWITTER ROBERTA
+    # transformers_pipelines.test_hugging_face_pipeline(model="cardiffnlp/twitter-roberta-base-sentiment-latest",
+    #                                                 X_test=X_test,
+    #                                                 y_test=y_test,
+    #                                                 path_conf_matrix="./plots/conf_matrix/transformers/twitter-roberta"
+    #                                                 )
+
+    # ## FIN-BERT
+    # transformers_pipelines.test_hugging_face_pipeline(model="ahmedrachid/FinancialBERT-Sentiment-Analysis",
+    #                                                 X_test=X_test,
+    #                                                 y_test=y_test,
+    #                                                 path_conf_matrix="./plots/conf_matrix/transformers/finBERT"
+    #                                                 )
 
 
 
+
+    ### PYTORCH DATASET
+    ds = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_TRAIN_DATA)
+    print(len(ds))
+    print(ds[4])
 
 
 
