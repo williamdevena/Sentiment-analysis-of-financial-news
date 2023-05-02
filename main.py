@@ -41,7 +41,7 @@ def main():
     # print(len(exclusive_words_financial), len(exclusive_words_twitter))
 
 
-    # # ### BASELINESS
+    # ### BASELINESS
     # data = data_processing.read_ds()
 
     # # ### SVM ON TF-IDF
@@ -67,7 +67,7 @@ def main():
 
 
 
-    #### GRID-SEARCH HYP. TUNING OF NAIVE-BAYES
+    ### GRID-SEARCH HYP. TUNING OF NAIVE-BAYES
     # data = data_processing.read_ds()
     # baselines.grid_search_tuning_nb(data=data)
 
@@ -78,11 +78,27 @@ def main():
     # #print(pd.merge(X_train, y_train, left_index=True, right_index=True))
     # train = pd.merge(X_train, y_train, left_index=True, right_index=True)
     # test = pd.merge(X_test, y_test, left_index=True, right_index=True)
-
     # train.to_csv("./train.csv")
     # test.to_csv("./test.csv")
-
     # print(train.shape, test.shape)
+
+    # from sklearn.model_selection import train_test_split
+    # data = data_processing.read_ds()
+    # all_text = data['text']
+    # labels = data["sentiment"]
+
+    # X_train, X_test, y_train, y_test = train_test_split(all_text, labels, test_size=0.2, random_state=42, shuffle=True)
+    # X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.25, random_state=42, shuffle=True)
+
+    # train = pd.merge(X_train, y_train, left_index=True, right_index=True)
+    # test = pd.merge(X_test, y_test, left_index=True, right_index=True)
+    # val = pd.merge(X_val, y_val, left_index=True, right_index=True)
+    # print(train.shape, test.shape, val.shape)
+    # #print(f.shape, test.shape, val.shape)
+    # train.to_csv("./train.csv")
+    # test.to_csv("./test.csv")
+    # val.to_csv("./val.csv")
+
 
 
 
@@ -110,10 +126,25 @@ def main():
 
 
 
-    ### PYTORCH DATASET
-    ds = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_TRAIN_DATA)
-    print(len(ds))
-    print(ds[4])
+    ## PYTORCH DATASET
+    # ds_train = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_TRAIN_DATA)
+    # ds_test = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_TEST_DATA)
+    # ds_val = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_VAL_DATA)
+    # print(len(ds_train), len(ds_test), len(ds_val))
+    # print(ds_train[4])
+
+
+
+    ## TOKENIZER
+    # import torchtext
+    # from torchtext.data import get_tokenizer
+    # tokenizer = get_tokenizer("basic_english")
+    # tokens = tokenizer.encode("You can now install TorchText using pip!")
+    # print(tokens)
+
+    data = data_processing.read_ds()
+    dict = data_processing.create_dictionary(data=data)
+    print(dict)
 
 
 

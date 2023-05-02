@@ -1,8 +1,26 @@
+import nltk
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import train_test_split
 
 from utils import costants
+
+
+def create_dictionary(data):
+    list_tot_words = []
+    for text in data['text'].dropna():
+        list_tot_words += nltk.word_tokenize(text)
+
+    all_words = list(set(list_tot_words))
+    #print(all_words)
+    dictionary = {
+        word: idx
+        for idx, word in enumerate(all_words)
+    }
+
+    return dictionary
+
+
 
 
 def build_train_test_dataset(data):

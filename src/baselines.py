@@ -2,6 +2,7 @@ import logging
 
 import matplotlib.pyplot as plt
 import numpy as np
+import plotly.express as px
 import seaborn as sns
 from sklearn import svm
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -67,7 +68,9 @@ def tf_idf_vectorize(X_train, X_test):
     Returns:
         - tuple: A tuple of vectorized training data and vectorized test data.
     """
-    tf_idf_vectorizer = TfidfVectorizer()
+    tf_idf_vectorizer = TfidfVectorizer(
+        #stop_words='english'
+        )
     X_train_vectorized = tf_idf_vectorizer.fit_transform(X_train)
     X_test_vectorized = tf_idf_vectorizer.transform(X_test)
 
@@ -86,8 +89,12 @@ def grid_search_tuning_nb(data):
     Returns: None
     """
     max_score=0
-    for max_df in  np.arange(0.1, 1.0, 0.1):
-        for min_df in  np.arange(0, 10, 1):
+    list_max_df = []
+    list_min_df = []
+    list_scores = []
+    for max_df in  np.arange(0.1, 1.0, 0.01):
+    #for max_df in  np.arange(4, 3000, 1):
+        for min_df in  np.arange(0, 800, 1):  ## doesn't go more than 800
             logging.info(f"\nMAX-DF: {max_df}")
             logging.info(f"MIN-DF: {min_df}")
             # try:
@@ -101,6 +108,9 @@ def grid_search_tuning_nb(data):
                                             path_conf_matrix=None,
                                             log_metrics=False)
             logging.info(f"SCORE: {score}")
+            list_scores.append(score)
+            list_max_df.append(max_df)
+            list_min_df.append(min_df)
 
             if score>max_score:
                 max_score = score
@@ -114,13 +124,30 @@ def grid_search_tuning_nb(data):
     X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data,
                                                                                         max_df=best_max_df,
                                                                                         min_df=best_min_df)
-    # score = naive_bayes_classifier(X_train=X_train,
-    #                                 X_test=X_test,
-    #                                 y_train=y_train,
-    #                                 y_test=y_test)
-    # metrics.build_and_save_conf_matrix(y_pred=y_pred,
-    #                                     y=y_test,
-                                        # path="./plots/conf_matrix/nb/best_nb")
+
+    # plt.plot(list_max_df, list_scores)
+    # plt.xlabel("Max DF")
+    # plt.ylabel("Accuracy")
+    # plt.savefig("./2d_nb_max_df")
+    # fig = px.scatter_3d(x=list_max_df, y=list_min_df, z=list_scores)
+    # fig.show()
+
+    # fig = plt.figure()
+    # # syntax for 3-D projection
+    # ax = plt.axes(projection ='3d')
+    # # ax.plot_trisurf(np.array(list_max_df), np.array(list_min_df), np.array(list_scores),
+    # #                cmap='viridis', edgecolor='green')
+    # # ax.scatter(np.array(list_max_df),
+    # #            np.array(list_min_df),
+    # #            np.array(list_scores),
+    # #            c=np.array(list_scores))
+    # ax.plot3D(list_max_df, list_min_df, list_scores, 'green')
+
+    # ax.set_xlabel('Max DF')
+    # ax.set_ylabel('Min DF')
+    # ax.set_zlabel('Accuracy')
+    # ax.set_title('Naive-Bayes Grid-Search Hyperparameters')
+    # plt.savefig("./3d_nb2")
 
 
 
