@@ -1,24 +1,91 @@
+import logging
+
 import nltk
+import numpy as np
 import pandas as pd
+from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import train_test_split
 
 from utils import costants
 
 
+def pad_sentences(list_int_sentences, max_seq_length):
+    list_int_sentences_padded = np.zeros((len(list_int_sentences), max_seq_length), dtype = int)
+
+    for i, sent in enumerate(list_int_sentences):
+        sent_len = len(sent)
+
+        if sent_len <= max_seq_length:
+            zeros = list(np.zeros(max_seq_length-sent_len))
+            new = zeros+sent
+        elif sent_len > max_seq_length:
+            raise ValueError("max_seq_length too small (smaller than some sentence in the dataset)")
+
+        list_int_sentences_padded[i,:] = np.array(new)
+
+    return list_int_sentences_padded
+
+
+
+def create_list_encoded_words(dict, list_tokenized_sentences):
+    #dict = create_dictionary(data=data)
+    list_int_sentences = []
+    for sent in list_tokenized_sentences:
+        r = [dict[w] for w in sent]
+        list_int_sentences.append(r)
+
+    return list_int_sentences
+
+
+
+def create_list_tokenized_words(data, dict):
+    list_tokenized_sentences = []
+    max_len = 0
+    for text in data['text'].dropna():
+        list_tokenized_words = nltk.word_tokenize(text)
+        cleaned_list_tokenized_words = [word for word in list_tokenized_words
+                                        if word in dict]
+        list_tokenized_sentences.append(cleaned_list_tokenized_words)
+
+        if len(cleaned_list_tokenized_words)>max_len:
+            max_len = len(cleaned_list_tokenized_words)
+
+    logging.info(f"MAX LEN OF TOKENIZED SENTENCES: {max_len}")
+
+    return list_tokenized_sentences, max_len
+
+
+
 def create_dictionary(data):
+    words = set(nltk.corpus.words.words())
+    stop_words = stopwords.words('english')
     list_tot_words = []
     for text in data['text'].dropna():
-        list_tot_words += nltk.word_tokenize(text)
+        list_tokenized_words = nltk.word_tokenize(text)
+        cleaned_list_tokenized_words = [word
+                                        for word in list_tokenized_words
+                                        if (word in words) and (word not in stop_words)
+                                        ]
+        list_tot_words += cleaned_list_tokenized_words
 
     all_words = list(set(list_tot_words))
-    #print(all_words)
     dictionary = {
-        word: idx
+        word: idx+1
         for idx, word in enumerate(all_words)
     }
 
     return dictionary
+
+
+def decode_list_int(encoded_sent, dict):
+    decoded_sent = []
+    for int in encoded_sent:
+        word = [k for k, v in dict.items() if v==int]
+        if len(word)>0:
+            decoded_sent.append(word)
+
+    return decoded_sent
 
 
 

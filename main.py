@@ -1,5 +1,6 @@
 import logging
 import os
+from pprint import pprint
 
 import pandas as pd
 from nltk.sentiment import SentimentIntensityAnalyzer
@@ -126,12 +127,7 @@ def main():
 
 
 
-    ## PYTORCH DATASET
-    # ds_train = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_TRAIN_DATA)
-    # ds_test = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_TEST_DATA)
-    # ds_val = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_VAL_DATA)
-    # print(len(ds_train), len(ds_test), len(ds_val))
-    # print(ds_train[4])
+
 
 
 
@@ -142,9 +138,41 @@ def main():
     # tokens = tokenizer.encode("You can now install TorchText using pip!")
     # print(tokens)
 
+    # data = data_processing.read_ds()
+    # dict = data_processing.create_dictionary(data=data)
+    # list_tokenized_sentences = data_processing.create_list_tokenized_words(data=data)
+    # list_int_sentences = data_processing.create_list_encoded_words(dict, list_tokenized_sentences)
+
+    # decoded_sent = data_processing.decode_list_int(encoded_sent=list_int_sentences[11],
+    #                                                dict=dict)
+    # print(decoded_sent)
+
+    # #for x in  range()
+    # list_int_sentences_padded = data_processing.pad_sentences(list_int_sentences, 100)
+    # print(list_int_sentences_padded.shape)
+
+
+
+    # PYTORCH DATASET
     data = data_processing.read_ds()
     dict = data_processing.create_dictionary(data=data)
-    print(dict)
+    ds_train = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_TRAIN_DATA,
+                                                    dict_ds=dict)
+
+
+    # pprint(dict)
+    # print(len(dict))
+
+
+
+    # ds_test = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_TEST_DATA)
+    # ds_val = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_VAL_DATA)
+    #print(len(ds_train), len(ds_test), len(ds_val))
+    #print(ds_train[4])
+    # text_encoded, sentiment = ds_train[4]
+    # text_decoded = data_processing.decode_list_int(encoded_sent=text_encoded,
+    #                                                dict=dict)
+    # print(text_decoded, sentiment)
 
 
 
