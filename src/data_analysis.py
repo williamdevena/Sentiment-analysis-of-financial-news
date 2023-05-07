@@ -4,8 +4,23 @@ import os
 import matplotlib.pyplot as plt
 import nltk
 import numpy as np
+import pandas as pd
 
 from utils import costants
+
+
+def stats_embeddings(list_embeddings, path_plot):
+    list_lengths_sentences = [sent.shape[0] for sent in list_embeddings]
+    plt.hist(list_lengths_sentences)
+    plt.savefig(path_plot)
+    plt.close()
+    series_embeddings = pd.Series(list_lengths_sentences)
+    logging.info("- STATISTICS OF VECTORIZED DATASET:")
+    logging.info(series_embeddings.describe())
+
+
+
+
 
 
 def ds_statistics(ds):

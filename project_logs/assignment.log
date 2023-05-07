@@ -32327,3 +32327,97 @@ MAX LEN OF TOKENIZED SENTENCES: 60
 MAX LEN OF TOKENIZED SENTENCES: 60
 MAX LEN OF TOKENIZED SENTENCES: 27
 MAX LEN OF TOKENIZED SENTENCES: 27
+- DICTIONARY BUILT
+- VECTORIZED DATASET
+count                                                  2907
+unique                                                 2907
+top       [[0.53074, 0.40117, -0.40785, 0.15444, 0.47782...
+freq                                                      1
+dtype: object
+- DICTIONARY BUILT
+- VECTORIZED DATASET IN /Users/william.devena/Desktop/UCL/COURSES/NLP/ASSIGNMENT/Sentiment-analysis-of-financial-news/../Data/train.csv
+count    2907.000000
+mean       20.528724
+std         8.791192
+min         2.000000
+25%        14.000000
+50%        19.000000
+75%        26.000000
+max        53.000000
+dtype: float64
+- DICTIONARY BUILT
+- VECTORIZED DATASET IN /Users/william.devena/Desktop/UCL/COURSES/NLP/ASSIGNMENT/Sentiment-analysis-of-financial-news/../Data/train.csv
+- STATISTICS OF VECTORIZED DATASET:
+count    2907.000000
+mean       20.528724
+std         8.791192
+min         2.000000
+25%        14.000000
+50%        19.000000
+75%        26.000000
+max        53.000000
+dtype: float64
+- DICTIONARY BUILT
+- VECTORIZED DATASET IN /Users/william.devena/Desktop/UCL/COURSES/NLP/ASSIGNMENT/Sentiment-analysis-of-financial-news/../Data/test.csv
+- STATISTICS OF VECTORIZED DATASET:
+count    970.000000
+mean      20.726804
+std        9.036253
+min        1.000000
+25%       14.000000
+50%       20.000000
+75%       27.000000
+max       51.000000
+dtype: float64
+- DICTIONARY BUILT
+- VECTORIZED DATASET IN /Users/william.devena/Desktop/UCL/COURSES/NLP/ASSIGNMENT/Sentiment-analysis-of-financial-news/../Data/val.csv
+- STATISTICS OF VECTORIZED DATASET:
+count    969.000000
+mean      20.865841
+std        9.071602
+min        3.000000
+25%       14.000000
+50%       20.000000
+75%       27.000000
+max       70.000000
+dtype: float64
+- DICTIONARY BUILT
+- VECTORIZED DATASET IN /Users/william.devena/Desktop/UCL/COURSES/NLP/ASSIGNMENT/Sentiment-analysis-of-financial-news/../Data/train.csv
+- STATISTICS OF VECTORIZED DATASET:
+count    2907.000000
+mean       20.528724
+std         8.791192
+min         2.000000
+25%        14.000000
+50%        19.000000
+75%        26.000000
+max        53.000000
+dtype: float64
+- VECTORIZED DATASET IN /Users/william.devena/Desktop/UCL/COURSES/NLP/ASSIGNMENT/Sentiment-analysis-of-financial-news/../Data/test.csv
+- STATISTICS OF VECTORIZED DATASET:
+count    970.000000
+mean      20.726804
+std        9.036253
+min        1.000000
+25%       14.000000
+50%       20.000000
+75%       27.000000
+max       51.000000
+dtype: float64
+- VECTORIZED DATASET IN /Users/william.devena/Desktop/UCL/COURSES/NLP/ASSIGNMENT/Sentiment-analysis-of-financial-news/../Data/val.csv
+- STATISTICS OF VECTORIZED DATASET:
+count    969.000000
+mean      20.865841
+std        9.071602
+min        3.000000
+25%       14.000000
+50%       20.000000
+75%       27.000000
+max       70.000000
+dtype: float64
+- DICTIONARY BUILT
+- VECTORIZED DATASET IN /Users/william.devena/Desktop/UCL/COURSES/NLP/ASSIGNMENT/Sentiment-analysis-of-financial-news/../Data/train.csv
+- DICTIONARY BUILT
+- VECTORIZED DATASET IN /Users/william.devena/Desktop/UCL/COURSES/NLP/ASSIGNMENT/Sentiment-analysis-of-financial-news/../Data/train.csv
+- VECTORIZED DATASET IN /Users/william.devena/Desktop/UCL/COURSES/NLP/ASSIGNMENT/Sentiment-analysis-of-financial-news/../Data/test.csv
+- VECTORIZED DATASET IN /Users/william.devena/Desktop/UCL/COURSES/NLP/ASSIGNMENT/Sentiment-analysis-of-financial-news/../Data/val.csv

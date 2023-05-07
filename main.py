@@ -154,10 +154,10 @@ def main():
 
 
     # PYTORCH DATASET
-    data = data_processing.read_ds()
-    dict = data_processing.create_dictionary(data=data)
-    ds_train = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_TRAIN_DATA,
-                                                    dict_ds=dict)
+    # data = data_processing.read_ds()
+    # dict = data_processing.create_dictionary(data=data)
+    # ds_train = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_TRAIN_DATA,
+    #                                                 dict_ds=dict)
 
 
     # pprint(dict)
@@ -175,6 +175,46 @@ def main():
     # print(text_decoded, sentiment)
 
 
+    ### TEST DATASET PREPARATION
+    # dataset = data_processing.dataset_preparation()
+    # print(dataset)
+
+
+
+
+
+    ############## VECTORIZING DATASETS USING GLOVE
+    words_dict = data_processing.build_dict(filename="./glove/glove.6B.50d.txt")
+    LENGTH_FOR_PADDING = 72
+
+    ##### TRAIN
+    list_embeddings, sentiment = data_processing.vectorize_ds(path_csv=costants.FINANCIAL_NEWS_TRAIN_DATA,
+                                                            words_dict=words_dict)
+
+    vectorized_ds = data_processing.pad_list_embeddings(list_embeddings=list_embeddings,
+                                                        desired_sent_length=LENGTH_FOR_PADDING)
+    print(vectorized_ds.shape, sentiment.shape)
+
+    # data_analysis.stats_embeddings(list_embeddings=vectorized_ds,
+    #                                path_plot="./plots/ds_stats/length_vectorized_train_glove")
+
+    #### TEST
+    list_embeddings, sentiment = data_processing.vectorize_ds(path_csv=costants.FINANCIAL_NEWS_TEST_DATA,
+                                                            words_dict=words_dict)
+    vectorized_ds = data_processing.pad_list_embeddings(list_embeddings=list_embeddings,
+                                                        desired_sent_length=LENGTH_FOR_PADDING)
+    print(vectorized_ds.shape, sentiment.shape)
+    # data_analysis.stats_embeddings(list_embeddings=vectorized_ds,
+    #                                path_plot="./plots/ds_stats/length_vectorized_test_glove")
+
+    ##### VAL
+    list_embeddings, sentiment = data_processing.vectorize_ds(path_csv=costants.FINANCIAL_NEWS_VAL_DATA,
+                                                            words_dict=words_dict)
+    vectorized_ds = data_processing.pad_list_embeddings(list_embeddings=list_embeddings,
+                                                        desired_sent_length=LENGTH_FOR_PADDING)
+    print(vectorized_ds.shape, sentiment.shape)
+    # data_analysis.stats_embeddings(list_embeddings=vectorized_ds,
+    #                                path_plot="./plots/ds_stats/length_vectorized_val_glove")
 
 
 
