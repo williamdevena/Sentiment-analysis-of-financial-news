@@ -1,0 +1,30 @@
+Found cached dataset financial_phrasebank (/Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_allagree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141)
+
+SVM ON TF-IDF FEATURES
+AVG ACCURACY: 0.8543046357615894
+AVG PRECISION: 0.8386290109062386
+AVG RECALL: 0.7412336236446908
+AVG F1-SCORE: 0.777133609784666
+
+NAIVE-BAYES CLASSIFIER
+Found cached dataset financial_phrasebank (/Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_50agree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141)
+
+SVM ON TF-IDF FEATURES
+AVG ACCURACY: 0.7577319587628866
+AVG PRECISION: 0.8219257014454535
+AVG RECALL: 0.6316508089885701
+AVG F1-SCORE: 0.6800380037768066
+
+NAIVE-BAYES CLASSIFIER
+Found cached dataset financial_phrasebank (/Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_50agree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141)
+Loading cached split indices for dataset at /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_50agree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-a14920a80cbb8d92.arrow and /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_50agree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-d5c84c2401ad53b5.arrow
+Loading cached split indices for dataset at /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_50agree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-d64fa76ba3b250c9.arrow and /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_50agree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-4cb6b466f067c4ff.arrow
+Found cached dataset financial_phrasebank (/Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_50agree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141)
+Loading cached split indices for dataset at /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_50agree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-a14920a80cbb8d92.arrow and /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_50agree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-d5c84c2401ad53b5.arrow
+Loading cached split indices for dataset at /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_50agree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-d64fa76ba3b250c9.arrow and /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_50agree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-4cb6b466f067c4ff.arrow
+Found cached dataset financial_phrasebank (/Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_allagree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141)
+Loading cached split indices for dataset at /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_allagree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-1606e46590b0bad3.arrow and /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_allagree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-6e5e5388b8e1e058.arrow
+Loading cached split indices for dataset at /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_allagree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-93b5aa3b5f2e05ea.arrow and /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_allagree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-5d8661af3fa0b850.arrow
+Found cached dataset financial_phrasebank (/Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_allagree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141)
+Loading cached split indices for dataset at /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_allagree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-1606e46590b0bad3.arrow and /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_allagree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-6e5e5388b8e1e058.arrow
+Loading cached split indices for dataset at /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_allagree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-93b5aa3b5f2e05ea.arrow and /Users/william.devena/.cache/huggingface/datasets/financial_phrasebank/sentences_allagree/1.0.0/550bde12e6c30e2674da973a55f57edde5181d53f5a5a34c1531c53f93b7e141/cache-5d8661af3fa0b850.arrow
