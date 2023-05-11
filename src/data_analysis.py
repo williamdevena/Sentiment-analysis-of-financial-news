@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from nltk.stem import PorterStemmer
 
-from utils import costants
+from utils import constants
 
 
 def stats_embeddings(list_embeddings, path_plot):
@@ -151,11 +151,11 @@ def compare_datasets(ds_1, ds_2):
     logging.info("FINANCIAL DATA")
     tot_diff_words_1, counts_words_1, tot_num_words_1 = calculate_stats_words(ds_1)
     _ = calculate_stats_length_text(ds=ds_1,
-                                    path_hist_plot=os.path.join(costants.STATS_PLOT_FOLDER, "financial_news"))
+                                    path_hist_plot=os.path.join(constants.STATS_PLOT_FOLDER, "financial_news"))
     logging.info("\nTWITTER DATA")
     tot_diff_words_2, counts_words_2, tot_num_words_2 = calculate_stats_words(ds_2)
     _ = calculate_stats_length_text(ds=ds_2,
-                                    path_hist_plot=os.path.join(costants.STATS_PLOT_FOLDER, "twitter"))
+                                    path_hist_plot=os.path.join(constants.STATS_PLOT_FOLDER, "twitter"))
     #print(tot_words_1)
     threshold = 0.00008
     exclusive_words_1 = [word for word in tot_diff_words_1 if ((word not in tot_diff_words_2) and

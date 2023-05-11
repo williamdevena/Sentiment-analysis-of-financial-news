@@ -94,6 +94,7 @@ def grid_search_tuning_nb(data):
 
     Returns: None
     """
+    logging.info("- PERFOMING GRID-SEARCH TUNING OF MIN_DF AND MAX_DF PARAMETERS")
     max_score=0
     list_max_df_3d = []
     list_min_df_3d = []
@@ -104,13 +105,13 @@ def grid_search_tuning_nb(data):
         list_scores = []
         list_min_df = []
         for min_df in  np.arange(0, 200, 1):  ## doesn't go more than 800
-            logging.info(f"\nMAX-DF: {max_df}")
-            logging.info(f"MIN-DF: {min_df}")
+            #logging.info(f"\nMAX-DF: {max_df}")
+            #logging.info(f"MIN-DF: {min_df}")
             try:
                 X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data,
                                                                                                     max_df=0.1,
                                                                                                     min_df=min_df)
-                score = naive_bayes_classifier(X_train=X_train,
+                score, _, _, _ = naive_bayes_classifier(X_train=X_train,
                                                 X_test=X_test,
                                                 y_train=y_train,
                                                 y_test=y_test,
@@ -122,14 +123,14 @@ def grid_search_tuning_nb(data):
                     best_max_df = max_df
                     best_min_df = min_df
 
-                logging.info(f"SCORE: {score}")
+                #logging.info(f"SCORE: {score}")
                 list_scores.append(score)
                 list_min_df.append(min_df)
                 list_max_df_3d.append(max_df)
                 list_min_df_3d.append(min_df)
                 list_scores_3d.append(score)
             except:
-                print("ERROR")
+                print("Error")
 
         dict_acc[max_df] = (list_scores, list_min_df)
 
@@ -191,9 +192,10 @@ def naive_bayes_classifier(X_train, X_test, y_train, y_test, path_conf_matrix, l
                                                 y_test=y_test)
     if log_metrics:
         logging.info(f"\nNAIVE-BAYES CLASSIFIER")
-        avg_acc, avg_precision, avg_recall, avg_f1 = metrics.log_metrics(y=y_test,
-                                                                         y_pred=y_pred,
-                                                                         path_conf_matrix=path_conf_matrix)
+    avg_acc, avg_precision, avg_recall, avg_f1 = metrics.log_metrics(y=y_test,
+                                                                        y_pred=y_pred,
+                                                                        path_conf_matrix=path_conf_matrix,
+                                                                        log=False)
 
     return avg_acc, avg_precision, avg_recall, avg_f1
 

@@ -1,7 +1,7 @@
 from datasets import DatasetDict, load_dataset
 from transformers import AutoTokenizer
 
-from pytorch_dataset import FinancialNewsDataset
+from src.pytorch_dataset import FinancialNewsDataset
 
 
 def load_train_test_val_pytorch_ds(agreement, tokenizer_name):

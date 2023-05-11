@@ -12,7 +12,7 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import train_test_split
 
-from utils import costants
+from utils import constants
 
 
 def pre_process_X(X):
@@ -356,7 +356,7 @@ def read_ds_twitter():
         dataset (20% of the original). Has two
         columns (sentiment and text)
     """
-    twitter_data = pd.read_csv(costants.TWITTER_CSV_PATH, sep=",", names=['_', 'sentiment', 'text'])
+    twitter_data = pd.read_csv(constants.TWITTER_CSV_PATH, sep=",", names=['_', 'sentiment', 'text'])
     twitter_data['sentiment'] = twitter_data['sentiment'].replace({'Neutral':0, 'Positive':1, 'Negative':-1})
     twitter_data = twitter_data.drop('_', axis='columns')
 

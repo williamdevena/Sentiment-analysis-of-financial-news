@@ -3,78 +3,95 @@ import os
 from pprint import pprint
 
 import pandas as pd
+import transformers
 from nltk.sentiment import SentimentIntensityAnalyzer
+from transformers import AutoModelForSequenceClassification
 
-from models import baselines, transformers_pipelines
-from src import data_analysis, data_processing, pytorch_dataset
-from utils import costants, metrics
+from models import baselines, test, transformers_pipelines
+from src import data_analysis, data_loading, data_processing, pytorch_dataset
+from utils import constants, metrics, setup
 
 
 def main():
+    # ## SETTING UP
+    setup.project_setup()
 
-    ## LOGGING SETUP
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(message)s",
-        handlers=[
-            logging.FileHandler("project_logs/assignment.log"),
-            logging.StreamHandler()
-        ]
-    )
+    # SETTING SEED FOR REPRODUCIBILITY
+    transformers.set_seed(seed=10)
 
 
-    # # STATISTICS DATASET
-    # data = data_processing.read_ds()
-    # tot_words, counts_words = data_analysis.calculate_stats_words(data)
-    # ###print(len(tot_words), counts_words[:10])
+    ## BASELINES ON ALLAGREE
+    # data = data_processing.read_ds(agreement_percentage="sentences_allagree")
+    # #print(len(data))
 
-    # ## STATISTICS TWITTER DATA
-    # twitter_data = data_processing.read_ds_twitter()
-    # tot_words, counts_words = data_analysis.calculate_stats_words(twitter_data)
-    # ###print(len(tot_words), counts_words[:10])
+    # # ### SVM ON TF-IDF
+    # X_train, X_test, y_train, y_test = data_processing.build_train_test_dataset(data=data)
 
+    # avg_acc_svm, avg_precision_svm, avg_recall_svm, avg_f1_svm = baselines.svm_tf_idf(X_train=X_train,
+    #                                                                  X_test=X_test,
+    #                                                                  y_train=y_train,
+    #                                                                  y_test=y_test,
+    #                                                                  path_conf_matrix="./plots/conf_matrix/svm_tf_idf/svm_allagree")
 
-    # ## COMPARISON DATASETS
-    # financial_data = data_processing.read_ds()
-    # twitter_data = data_processing.read_ds_twitter()
-    # exclusive_words_financial, exclusive_words_twitter = data_analysis.compare_datasets(financial_data, twitter_data)
-    # print(exclusive_words_financial)
-    # print()
-    # print(exclusive_words_twitter)
-    # print(len(exclusive_words_financial), len(exclusive_words_twitter))
-
-
-    ### BASELINESS
-    data = data_processing.read_ds(agreement_percentage="sentences_allagree")
-
-    # ### SVM ON TF-IDF
-    X_train, X_test, y_train, y_test = data_processing.build_train_test_dataset(data=data)
-    avg_acc_svm, avg_precision_svm, avg_recall_svm, avg_f1_svm = baselines.svm_tf_idf(X_train=X_train,
-                                                                     X_test=X_test,
-                                                                     y_train=y_train,
-                                                                     y_test=y_test,
-                                                                     path_conf_matrix="./plots/conf_matrix/svm_tf_idf/svm")
-
-    ### NAIVE BAYES
-    X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data,
-                                                                                         max_df=0.1,
-                                                                                         min_df=3)
-    avg_acc_nb, avg_precision_nb, avg_recall_nb, avg_f1_nb = baselines.naive_bayes_classifier(X_train=X_train,
-                                                                                X_test=X_test,
-                                                                                y_train=y_train,
-                                                                                y_test=y_test,
-                                                                                path_conf_matrix="./plots/conf_matrix/nb/best_nb_2")
+    # ### NAIVE BAYES
+    # X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data,
+    #                                                                                      max_df=0.1,
+    #                                                                                      min_df=3)
+    # avg_acc_nb, avg_precision_nb, avg_recall_nb, avg_f1_nb = baselines.naive_bayes_classifier(X_train=X_train,
+    #                                                                             X_test=X_test,
+    #                                                                             y_train=y_train,
+    #                                                                             y_test=y_test,
+    #                                                                             path_conf_matrix="./plots/conf_matrix/nb/best_nb_allagree")
 
 
-    baselines_metrics = {
-        'SVM': {'Accuracy':avg_acc_svm, 'Precision':avg_precision_svm, 'Recall':avg_recall_svm, 'F1-score':avg_f1_svm},
-        'Naive-Bayes': {'Accuracy':avg_acc_nb, 'Precision':avg_precision_nb, 'Recall':avg_recall_nb, 'F1-score':avg_f1_nb}
-    }
-    #print(baselines_metrics)
+    # baselines_metrics = {
+    #     'SVM': {'Accuracy':avg_acc_svm, 'Precision':avg_precision_svm, 'Recall':avg_recall_svm, 'F1-score':avg_f1_svm},
+    #     'Naive-Bayes': {'Accuracy':avg_acc_nb, 'Precision':avg_precision_nb, 'Recall':avg_recall_nb, 'F1-score':avg_f1_nb}
+    # }
 
-    metrics.build_and_save_radar_plot(metrics=baselines_metrics,
-                                      path_plot=os.path.join(
-                                          costants.PLOTS_FOLDER, "baselines_radar_plot.png"))
+    # metrics.build_and_save_radar_plot(metrics=baselines_metrics,
+    #                                   path_plot=os.path.join(
+    #                                       constants.PLOTS_FOLDER, "baselines_radar_plot_allagree.png"))
+
+
+
+
+    # ## BASELINES ON 50AGREE
+    # data = data_processing.read_ds(agreement_percentage="sentences_50agree")
+
+    # # ### SVM ON TF-IDF
+    # X_train, X_test, y_train, y_test = data_processing.build_train_test_dataset(data=data)
+
+    # avg_acc_svm, avg_precision_svm, avg_recall_svm, avg_f1_svm = baselines.svm_tf_idf(X_train=X_train,
+    #                                                                  X_test=X_test,
+    #                                                                  y_train=y_train,
+    #                                                                  y_test=y_test,
+    #                                                                  path_conf_matrix="./plots/conf_matrix/svm_tf_idf/svm_50agree")
+
+    # ### NAIVE BAYES
+    # X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data,
+    #                                                                                      max_df=0.1,
+    #                                                                                      min_df=3)
+    # avg_acc_nb, avg_precision_nb, avg_recall_nb, avg_f1_nb = baselines.naive_bayes_classifier(X_train=X_train,
+    #                                                                             X_test=X_test,
+    #                                                                             y_train=y_train,
+    #                                                                             y_test=y_test,
+    #                                                                             path_conf_matrix="./plots/conf_matrix/nb/best_nb_50agree")
+
+
+    # baselines_metrics = {
+    #     'SVM': {'Accuracy':avg_acc_svm, 'Precision':avg_precision_svm, 'Recall':avg_recall_svm, 'F1-score':avg_f1_svm},
+    #     'Naive-Bayes': {'Accuracy':avg_acc_nb, 'Precision':avg_precision_nb, 'Recall':avg_recall_nb, 'F1-score':avg_f1_nb}
+    # }
+
+    # metrics.build_and_save_radar_plot(metrics=baselines_metrics,
+    #                                   path_plot=os.path.join(
+    #                                       constants.PLOTS_FOLDER, "baselines_radar_plot_50.png"))
+
+
+
+
+
 
 
 
@@ -82,172 +99,80 @@ def main():
 
 
     # ## GRID-SEARCH HYP. TUNING OF NAIVE-BAYES
-    # data = data_processing.read_ds(agreement_percentage="sentences_50agree")
-    # baselines.grid_search_tuning_nb(data=data)
-
-
-
-    # ### CODE TO SAVE DIVIDED TRAIN AND TEST (FOR PYTORCH DS)
-    # print(X_train.index, y_train.index)
-    # #print(pd.merge(X_train, y_train, left_index=True, right_index=True))
-    # train = pd.merge(X_train, y_train, left_index=True, right_index=True)
-    # test = pd.merge(X_test, y_test, left_index=True, right_index=True)
-    # train.to_csv("./train.csv")
-    # test.to_csv("./test.csv")
-    # print(train.shape, test.shape)
-
-    # from sklearn.model_selection import train_test_split
-    # data = data_processing.read_ds()
-    # all_text = data['text']
-    # labels = data["sentiment"]
-
-    # X_train, X_test, y_train, y_test = train_test_split(all_text, labels, test_size=0.2, random_state=42, shuffle=True)
-    # X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.25, random_state=42, shuffle=True)
-
-    # train = pd.merge(X_train, y_train, left_index=True, right_index=True)
-    # test = pd.merge(X_test, y_test, left_index=True, right_index=True)
-    # val = pd.merge(X_val, y_val, left_index=True, right_index=True)
-    # print(train.shape, test.shape, val.shape)
-    # #print(f.shape, test.shape, val.shape)
-    # train.to_csv("./train.csv")
-    # test.to_csv("./test.csv")
-    # val.to_csv("./val.csv")
+    data = data_processing.read_ds(agreement_percentage="sentences_50agree")
+    baselines.grid_search_tuning_nb(data=data)
 
 
 
 
+    # # #### EVALUATE RoBERTa ON 50Agree
+    # roberta_metrics = {}
+    # tokenizer_name = "roberta-base"
+    # train_ds, test_ds, val_ds = data_loading.load_train_test_val_pytorch_ds(agreement="sentences_50agree",
+    #                                                             tokenizer_name=tokenizer_name)
+
+    # model_weights = os.path.join(constants.PATH_WEIGHTS, "base_50_6_epochs")
+    # y_pred, roberta_metrics["RoBERTa base (50Agree)"] = test.evaluate_model(model_path=model_weights,
+    #                                             test_ds=test_ds,
+    #                                             fun_compute_metrics=metrics.compute_metrics,
+    #                                             path_cm=os.path.join(constants.PLOTS_FOLDER,
+    #                                                                  "conf_matrix",
+    #                                                                  "transformers",
+    #                                                                  "RoBERTa_base_(50Agree)"),
+    #                                             )
+
+    # tokenizer_name = "cardiffnlp/twitter-roberta-base-sentiment-latest"
+    # train_ds, test_ds, val_ds = data_loading.load_train_test_val_pytorch_ds(agreement="sentences_50agree",
+    #                                                            tokenizer_name=tokenizer_name)
+
+    # model_weights = os.path.join(constants.PATH_WEIGHTS, "twitter_50_3_epochs")
+    # y_pred, roberta_metrics["RoBERTa Twitter (50Agree)"] = test.evaluate_model(model_path=model_weights,
+    #                                             test_ds=test_ds,
+    #                                             fun_compute_metrics=metrics.compute_metrics,
+    #                                             path_cm=os.path.join(constants.PLOTS_FOLDER,
+    #                                                                  "conf_matrix",
+    #                                                                  "transformers",
+    #                                                                  "RoBERTa_Twitter_(50Agree)"),
+    #                                             )
+
+    # path_radar=os.path.join(constants.PLOTS_FOLDER, "radar_RoBERTa_50Agree.png")
+    # metrics.build_and_save_radar_plot(metrics=roberta_metrics,
+    #                                   path_plot=path_radar)
 
 
-    ### TEST HUGGING FACE PIPELINES
-    # data = data_processing.read_ds()
-    # X_train, X_test, y_train, y_test = data_processing.build_train_test_dataset(data=data)
+    # #### EVALUATE RoBERTa ON AllAgree
+    # roberta_metrics = {}
+    # tokenizer_name = "roberta-base"
+    # train_ds, test_ds, val_ds = data_loading.load_train_test_val_pytorch_ds(agreement="sentences_allagree",
+    #                                                            tokenizer_name=tokenizer_name)
 
+    # model_weights = os.path.join(constants.PATH_WEIGHTS, "base_allagree_final")
+    # y_pred, roberta_metrics["RoBERTa base (AllAgree)"] = test.evaluate_model(model_path=model_weights,
+    #                                             test_ds=test_ds,
+    #                                             fun_compute_metrics=metrics.compute_metrics,
+    #                                             path_cm=os.path.join(constants.PLOTS_FOLDER,
+    #                                                                  "conf_matrix",
+    #                                                                  "transformers",
+    #                                                                  "RoBERTa_base_(AllAgree)"),
+    #                                             )
 
-    # ## TWITTER ROBERTA
-    # transformers_pipelines.test_hugging_face_pipeline(model="cardiffnlp/twitter-roberta-base-sentiment-latest",
-    #                                                 X_test=X_test,
-    #                                                 y_test=y_test,
-    #                                                 path_conf_matrix="./plots/conf_matrix/transformers/twitter-roberta"
-    #                                                 )
+    # tokenizer_name = "cardiffnlp/twitter-roberta-base-sentiment-latest"
+    # train_ds, test_ds, val_ds = data_loading.load_train_test_val_pytorch_ds(agreement="sentences_allagree",
+    #                                                            tokenizer_name=tokenizer_name)
 
-    # ## FIN-BERT
-    # transformers_pipelines.test_hugging_face_pipeline(model="ahmedrachid/FinancialBERT-Sentiment-Analysis",
-    #                                                 X_test=X_test,
-    #                                                 y_test=y_test,
-    #                                                 path_conf_matrix="./plots/conf_matrix/transformers/finBERT"
-    #                                                 )
+    # model_weights = os.path.join(constants.PATH_WEIGHTS, "twitter_allagree_6_epochs")
+    # y_pred, roberta_metrics["RoBERTa Twitter (AllAgree)"] = test.evaluate_model(model_path=model_weights,
+    #                                             test_ds=test_ds,
+    #                                             fun_compute_metrics=metrics.compute_metrics,
+    #                                             path_cm=os.path.join(constants.PLOTS_FOLDER,
+    #                                                                  "conf_matrix",
+    #                                                                  "transformers",
+    #                                                                  "RoBERTa_Twitter_(AllAgree)"),
+    #                                             )
 
-
-
-
-
-
-
-
-    ## TOKENIZER
-    # import torchtext
-    # from torchtext.data import get_tokenizer
-    # tokenizer = get_tokenizer("basic_english")
-    # tokens = tokenizer.encode("You can now install TorchText using pip!")
-    # print(tokens)
-
-    # data = data_processing.read_ds()
-    # dict = data_processing.create_dictionary(data=data)
-    # list_tokenized_sentences = data_processing.create_list_tokenized_words(data=data)
-    # list_int_sentences = data_processing.create_list_encoded_words(dict, list_tokenized_sentences)
-
-    # decoded_sent = data_processing.decode_list_int(encoded_sent=list_int_sentences[11],
-    #                                                dict=dict)
-    # print(decoded_sent)
-
-    # #for x in  range()
-    # list_int_sentences_padded = data_processing.pad_sentences(list_int_sentences, 100)
-    # print(list_int_sentences_padded.shape)
-
-
-
-    # PYTORCH DATASET
-    # data = data_processing.read_ds()
-    # dict = data_processing.create_dictionary(data=data)
-    # ds_train = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_TRAIN_DATA,
-    #                                                 dict_ds=dict)
-
-
-    # pprint(dict)
-    # print(len(dict))
-
-
-
-    # ds_test = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_TEST_DATA)
-    # ds_val = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_VAL_DATA)
-    #print(len(ds_train), len(ds_test), len(ds_val))
-    #print(ds_train[4])
-    # text_encoded, sentiment = ds_train[4]
-    # text_decoded = data_processing.decode_list_int(encoded_sent=text_encoded,
-    #                                                dict=dict)
-    # print(text_decoded, sentiment)
-
-
-    ### TEST DATASET PREPARATION
-    # dataset = data_processing.dataset_preparation()
-    # print(dataset)
-
-
-
-
-
-    ############## VECTORIZING DATASETS USING GLOVE
-    # words_dict = data_processing.build_dict(filename="./glove/glove.6B.50d.txt")
-    # LENGTH_FOR_PADDING = 72
-
-    # ##### TRAIN
-    # list_embeddings, sentiment = data_processing.vectorize_ds(path_csv=costants.FINANCIAL_NEWS_TRAIN_DATA,
-    #                                                         words_dict=words_dict)
-
-    # vectorized_ds = data_processing.pad_list_embeddings(list_embeddings=list_embeddings,
-    #                                                     desired_sent_length=LENGTH_FOR_PADDING)
-    # print(vectorized_ds.shape, sentiment.shape)
-
-    # # data_analysis.stats_embeddings(list_embeddings=vectorized_ds,
-    # #                                path_plot="./plots/ds_stats/length_vectorized_train_glove")
-
-    # #### TEST
-    # list_embeddings, sentiment = data_processing.vectorize_ds(path_csv=costants.FINANCIAL_NEWS_TEST_DATA,
-    #                                                         words_dict=words_dict)
-    # vectorized_ds = data_processing.pad_list_embeddings(list_embeddings=list_embeddings,
-    #                                                     desired_sent_length=LENGTH_FOR_PADDING)
-    # print(vectorized_ds.shape, sentiment.shape)
-    # # data_analysis.stats_embeddings(list_embeddings=vectorized_ds,
-    # #                                path_plot="./plots/ds_stats/length_vectorized_test_glove")
-
-    # ##### VAL
-    # list_embeddings, sentiment = data_processing.vectorize_ds(path_csv=costants.FINANCIAL_NEWS_VAL_DATA,
-    #                                                         words_dict=words_dict)
-    # vectorized_ds = data_processing.pad_list_embeddings(list_embeddings=list_embeddings,
-    #                                                     desired_sent_length=LENGTH_FOR_PADDING)
-    # print(vectorized_ds.shape, sentiment.shape)
-    # # data_analysis.stats_embeddings(list_embeddings=vectorized_ds,
-    # #                                path_plot="./plots/ds_stats/length_vectorized_val_glove")
-
-
-
-
-    #### PYTORCH DATASET WITH GLOVE EMBEDDIGNS
-    # words_dict = data_processing.build_dict(filename="./glove/glove.6B.50d.txt")
-    # LENGTH_FOR_PADDING = 72
-    # ds_train = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_TRAIN_DATA,
-    #                                                 words_dict=words_dict,
-    #                                                 max_length_for_padding=LENGTH_FOR_PADDING)
-    # print(len(ds_train))
-
-    # text, sentiment = ds_train[1]
-    # print(text.shape, sentiment)
-    # text, sentiment = ds_train[2]
-    # print(text.shape, sentiment)
-    # text, sentiment = ds_train[3]
-    # print(text.shape, sentiment)
-    # text, sentiment = ds_train[4]
-    # print(text.shape, sentiment)
+    # path_radar=os.path.join(constants.PLOTS_FOLDER, "radar_RoBERTa_AllAgree.png")
+    # metrics.build_and_save_radar_plot(metrics=roberta_metrics,
+    #                                   path_plot=path_radar)
 
 
 
