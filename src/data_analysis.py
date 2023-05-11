@@ -5,11 +5,23 @@ import matplotlib.pyplot as plt
 import nltk
 import numpy as np
 import pandas as pd
+from nltk.stem import PorterStemmer
 
 from utils import costants
 
 
 def stats_embeddings(list_embeddings, path_plot):
+    """
+    Generates descriptive statistics of a list of embeddings.
+
+    Args:
+        list_embeddings (list): A list of numpy arrays representing sentence embeddings.
+        path_plot (str): The file path to save the histogram plot of sentence lengths.
+
+    Returns:
+        None
+
+    """
     list_lengths_sentences = [sent.shape[0] for sent in list_embeddings]
     plt.hist(list_lengths_sentences)
     plt.savefig(path_plot)
@@ -25,7 +37,8 @@ def stats_embeddings(list_embeddings, path_plot):
 
 def ds_statistics(ds):
     """
-    Returns some statistics on the dataset:
+    Returns some statistics on the dataset: length of sentences,
+    distribution of lables, statistics on the signle words.
 
     Args:
         - ds (pd.DataFrame): the dataset, has two

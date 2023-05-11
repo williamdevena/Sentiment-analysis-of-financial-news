@@ -1,3 +1,5 @@
 plots/*
 test.ipynb
 glove/*
+*.jpg
+*.png

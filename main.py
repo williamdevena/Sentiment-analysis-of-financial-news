@@ -5,9 +5,9 @@ from pprint import pprint
 import pandas as pd
 from nltk.sentiment import SentimentIntensityAnalyzer
 
-from models import transformers_pipelines
-from src import baselines, data_analysis, data_processing, pytorch_dataset
-from utils import costants
+from models import baselines, transformers_pipelines
+from src import data_analysis, data_processing, pytorch_dataset
+from utils import costants, metrics
 
 
 def main():
@@ -23,10 +23,10 @@ def main():
     )
 
 
-    ## STATISTICS DATASET
+    # # STATISTICS DATASET
     # data = data_processing.read_ds()
     # tot_words, counts_words = data_analysis.calculate_stats_words(data)
-    ####print(len(tot_words), counts_words[:10])
+    # ###print(len(tot_words), counts_words[:10])
 
     # ## STATISTICS TWITTER DATA
     # twitter_data = data_processing.read_ds_twitter()
@@ -38,38 +38,51 @@ def main():
     # financial_data = data_processing.read_ds()
     # twitter_data = data_processing.read_ds_twitter()
     # exclusive_words_financial, exclusive_words_twitter = data_analysis.compare_datasets(financial_data, twitter_data)
-    # print(exclusive_words_financial, exclusive_words_twitter)
+    # print(exclusive_words_financial)
+    # print()
+    # print(exclusive_words_twitter)
     # print(len(exclusive_words_financial), len(exclusive_words_twitter))
 
 
-    # ### BASELINESS
-    # data = data_processing.read_ds()
+    ### BASELINESS
+    data = data_processing.read_ds(agreement_percentage="sentences_allagree")
 
-    # # ### SVM ON TF-IDF
-    # X_train, X_test, y_train, y_test = data_processing.build_train_test_dataset(data=data)
-    # baselines.svm_tf_idf(X_train=X_train,
-    #                      X_test=X_test,
-    #                      y_train=y_train,
-    #                      y_test=y_test,
-    #                      path_conf_matrix="./plots/conf_matrix/svm_tf_idf/svm")
+    # ### SVM ON TF-IDF
+    X_train, X_test, y_train, y_test = data_processing.build_train_test_dataset(data=data)
+    avg_acc_svm, avg_precision_svm, avg_recall_svm, avg_f1_svm = baselines.svm_tf_idf(X_train=X_train,
+                                                                     X_test=X_test,
+                                                                     y_train=y_train,
+                                                                     y_test=y_test,
+                                                                     path_conf_matrix="./plots/conf_matrix/svm_tf_idf/svm")
 
-    # # ### NAIVE BAYES
-    # X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data,
-    #                                                                                      max_df=0.1,
-    #                                                                                      min_df=3)
-    # baselines.naive_bayes_classifier(X_train=X_train,
-    #                                 X_test=X_test,
-    #                                 y_train=y_train,
-    #                                 y_test=y_test,
-    #                                 path_conf_matrix="./plots/conf_matrix/nb/best_nb_2")
-
-
+    ### NAIVE BAYES
+    X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data,
+                                                                                         max_df=0.1,
+                                                                                         min_df=3)
+    avg_acc_nb, avg_precision_nb, avg_recall_nb, avg_f1_nb = baselines.naive_bayes_classifier(X_train=X_train,
+                                                                                X_test=X_test,
+                                                                                y_train=y_train,
+                                                                                y_test=y_test,
+                                                                                path_conf_matrix="./plots/conf_matrix/nb/best_nb_2")
 
 
+    baselines_metrics = {
+        'SVM': {'Accuracy':avg_acc_svm, 'Precision':avg_precision_svm, 'Recall':avg_recall_svm, 'F1-score':avg_f1_svm},
+        'Naive-Bayes': {'Accuracy':avg_acc_nb, 'Precision':avg_precision_nb, 'Recall':avg_recall_nb, 'F1-score':avg_f1_nb}
+    }
+    #print(baselines_metrics)
+
+    metrics.build_and_save_radar_plot(metrics=baselines_metrics,
+                                      path_plot=os.path.join(
+                                          costants.PLOTS_FOLDER, "baselines_radar_plot.png"))
 
 
-    ### GRID-SEARCH HYP. TUNING OF NAIVE-BAYES
-    # data = data_processing.read_ds()
+
+
+
+
+    # ## GRID-SEARCH HYP. TUNING OF NAIVE-BAYES
+    # data = data_processing.read_ds(agreement_percentage="sentences_50agree")
     # baselines.grid_search_tuning_nb(data=data)
 
 
@@ -184,37 +197,57 @@ def main():
 
 
     ############## VECTORIZING DATASETS USING GLOVE
-    words_dict = data_processing.build_dict(filename="./glove/glove.6B.50d.txt")
-    LENGTH_FOR_PADDING = 72
+    # words_dict = data_processing.build_dict(filename="./glove/glove.6B.50d.txt")
+    # LENGTH_FOR_PADDING = 72
 
-    ##### TRAIN
-    list_embeddings, sentiment = data_processing.vectorize_ds(path_csv=costants.FINANCIAL_NEWS_TRAIN_DATA,
-                                                            words_dict=words_dict)
+    # ##### TRAIN
+    # list_embeddings, sentiment = data_processing.vectorize_ds(path_csv=costants.FINANCIAL_NEWS_TRAIN_DATA,
+    #                                                         words_dict=words_dict)
 
-    vectorized_ds = data_processing.pad_list_embeddings(list_embeddings=list_embeddings,
-                                                        desired_sent_length=LENGTH_FOR_PADDING)
-    print(vectorized_ds.shape, sentiment.shape)
+    # vectorized_ds = data_processing.pad_list_embeddings(list_embeddings=list_embeddings,
+    #                                                     desired_sent_length=LENGTH_FOR_PADDING)
+    # print(vectorized_ds.shape, sentiment.shape)
 
-    # data_analysis.stats_embeddings(list_embeddings=vectorized_ds,
-    #                                path_plot="./plots/ds_stats/length_vectorized_train_glove")
+    # # data_analysis.stats_embeddings(list_embeddings=vectorized_ds,
+    # #                                path_plot="./plots/ds_stats/length_vectorized_train_glove")
 
-    #### TEST
-    list_embeddings, sentiment = data_processing.vectorize_ds(path_csv=costants.FINANCIAL_NEWS_TEST_DATA,
-                                                            words_dict=words_dict)
-    vectorized_ds = data_processing.pad_list_embeddings(list_embeddings=list_embeddings,
-                                                        desired_sent_length=LENGTH_FOR_PADDING)
-    print(vectorized_ds.shape, sentiment.shape)
-    # data_analysis.stats_embeddings(list_embeddings=vectorized_ds,
-    #                                path_plot="./plots/ds_stats/length_vectorized_test_glove")
+    # #### TEST
+    # list_embeddings, sentiment = data_processing.vectorize_ds(path_csv=costants.FINANCIAL_NEWS_TEST_DATA,
+    #                                                         words_dict=words_dict)
+    # vectorized_ds = data_processing.pad_list_embeddings(list_embeddings=list_embeddings,
+    #                                                     desired_sent_length=LENGTH_FOR_PADDING)
+    # print(vectorized_ds.shape, sentiment.shape)
+    # # data_analysis.stats_embeddings(list_embeddings=vectorized_ds,
+    # #                                path_plot="./plots/ds_stats/length_vectorized_test_glove")
 
-    ##### VAL
-    list_embeddings, sentiment = data_processing.vectorize_ds(path_csv=costants.FINANCIAL_NEWS_VAL_DATA,
-                                                            words_dict=words_dict)
-    vectorized_ds = data_processing.pad_list_embeddings(list_embeddings=list_embeddings,
-                                                        desired_sent_length=LENGTH_FOR_PADDING)
-    print(vectorized_ds.shape, sentiment.shape)
-    # data_analysis.stats_embeddings(list_embeddings=vectorized_ds,
-    #                                path_plot="./plots/ds_stats/length_vectorized_val_glove")
+    # ##### VAL
+    # list_embeddings, sentiment = data_processing.vectorize_ds(path_csv=costants.FINANCIAL_NEWS_VAL_DATA,
+    #                                                         words_dict=words_dict)
+    # vectorized_ds = data_processing.pad_list_embeddings(list_embeddings=list_embeddings,
+    #                                                     desired_sent_length=LENGTH_FOR_PADDING)
+    # print(vectorized_ds.shape, sentiment.shape)
+    # # data_analysis.stats_embeddings(list_embeddings=vectorized_ds,
+    # #                                path_plot="./plots/ds_stats/length_vectorized_val_glove")
+
+
+
+
+    #### PYTORCH DATASET WITH GLOVE EMBEDDIGNS
+    # words_dict = data_processing.build_dict(filename="./glove/glove.6B.50d.txt")
+    # LENGTH_FOR_PADDING = 72
+    # ds_train = pytorch_dataset.FinancialNewsDataset(path_csv=costants.FINANCIAL_NEWS_TRAIN_DATA,
+    #                                                 words_dict=words_dict,
+    #                                                 max_length_for_padding=LENGTH_FOR_PADDING)
+    # print(len(ds_train))
+
+    # text, sentiment = ds_train[1]
+    # print(text.shape, sentiment)
+    # text, sentiment = ds_train[2]
+    # print(text.shape, sentiment)
+    # text, sentiment = ds_train[3]
+    # print(text.shape, sentiment)
+    # text, sentiment = ds_train[4]
+    # print(text.shape, sentiment)
 
 
 

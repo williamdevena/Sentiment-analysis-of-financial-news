@@ -1,9 +1,30 @@
 import logging
 
+import evaluate
 import matplotlib.pyplot as plt
 import numpy as np
+import plotly.graph_objects as go
 import seaborn as sns
+from evaluate.visualization import radar_plot
 from sklearn.metrics import confusion_matrix
+
+
+def compute_metrics(eval_pred):
+    acc = evaluate.load("accuracy")
+    precision = evaluate.load("precision")
+    recall = evaluate.load("recall")
+    f1 = evaluate.load("f1")
+    logits, labels = eval_pred
+    predictions = np.argmax(logits, axis=-1)
+
+    results = {"precision": precision.compute(predictions=predictions, references=labels, average="macro")['precision'],
+               "recall": recall.compute(predictions=predictions, references=labels, average="macro")['recall'],
+               "f1": f1.compute(predictions=predictions, references=labels, average="macro")['f1'],
+               "accuracy": acc.compute(predictions=predictions, references=labels)['accuracy']}
+
+    return results
+
+
 
 
 def log_metrics(y, y_pred, path_conf_matrix):
@@ -17,6 +38,24 @@ def log_metrics(y, y_pred, path_conf_matrix):
     logging.info(f"AVG PRECISION: {avg_precision}")
     logging.info(f"AVG RECALL: {avg_recall}")
     logging.info(f"AVG F1-SCORE: {avg_f1}")
+
+    return avg_acc, avg_precision, avg_recall, avg_f1
+
+
+
+def build_and_save_radar_plot(metrics, path_plot):
+    categories = ['Accuracy', 'Precision', 'Recall', 'F1-score']
+
+    fig = go.Figure()
+
+    for model, dict_metrics in metrics.items():
+        fig.add_trace(go.Scatterpolar(
+            r=[v for k, v in dict_metrics.items()],
+            theta=categories,
+            fill='toself',
+            name=model
+        ))
+    fig.write_image(path_plot)
 
 
 

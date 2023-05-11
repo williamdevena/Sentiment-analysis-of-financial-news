@@ -27,15 +27,21 @@ def svm_tf_idf(X_train, X_test, y_train, y_test, path_conf_matrix):
 
     Returns: None.
     """
-    X_train_vectorized, X_test_vectorized = tf_idf_vectorize(X_train=X_train,
-                                                             X_test=X_test)
+    X_train_pre_processed = data_processing.pre_process_X(X=X_train)
+    X_test_pre_processed = data_processing.pre_process_X(X=X_test)
+    X_train_vectorized, X_test_vectorized = tf_idf_vectorize(X_train=X_train_pre_processed,
+                                                             X_test=X_test_pre_processed)
 
     trained_svm = train_svm(X_train=X_train_vectorized,
                             y_train=y_train)
 
     y_pred = trained_svm.predict(X_test_vectorized)
     logging.info(f"\nSVM ON TF-IDF FEATURES")
-    metrics.log_metrics(y=y_test, y_pred=y_pred, path_conf_matrix=path_conf_matrix)
+    avg_acc, avg_precision, avg_recall, avg_f1 = metrics.log_metrics(y=y_test,
+                                                                     y_pred=y_pred,
+                                                                     path_conf_matrix=path_conf_matrix)
+
+    return avg_acc, avg_precision, avg_recall, avg_f1
 
 
 
@@ -89,65 +95,72 @@ def grid_search_tuning_nb(data):
     Returns: None
     """
     max_score=0
-    list_max_df = []
-    list_min_df = []
-    list_scores = []
-    for max_df in  np.arange(0.1, 1.0, 0.01):
-    #for max_df in  np.arange(4, 3000, 1):
-        for min_df in  np.arange(0, 800, 1):  ## doesn't go more than 800
+    list_max_df_3d = []
+    list_min_df_3d = []
+    list_scores_3d = []
+
+    dict_acc = {}
+    for max_df in  np.arange(0.1, 1.0, 0.1):
+        list_scores = []
+        list_min_df = []
+        for min_df in  np.arange(0, 200, 1):  ## doesn't go more than 800
             logging.info(f"\nMAX-DF: {max_df}")
             logging.info(f"MIN-DF: {min_df}")
-            # try:
-            X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data,
-                                                                                                max_df=max_df,
-                                                                                                min_df=min_df)
-            score = naive_bayes_classifier(X_train=X_train,
-                                            X_test=X_test,
-                                            y_train=y_train,
-                                            y_test=y_test,
-                                            path_conf_matrix=None,
-                                            log_metrics=False)
-            logging.info(f"SCORE: {score}")
-            list_scores.append(score)
-            list_max_df.append(max_df)
-            list_min_df.append(min_df)
+            try:
+                X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data,
+                                                                                                    max_df=0.1,
+                                                                                                    min_df=min_df)
+                score = naive_bayes_classifier(X_train=X_train,
+                                                X_test=X_test,
+                                                y_train=y_train,
+                                                y_test=y_test,
+                                                path_conf_matrix=None,
+                                                log_metrics=False)
 
-            if score>max_score:
-                max_score = score
-                best_max_df = max_df
-                best_min_df = min_df
-            # except:
-            #     print("NOT POSSIBLE")
+                if score>max_score:
+                    max_score = score
+                    best_max_df = max_df
+                    best_min_df = min_df
 
+                logging.info(f"SCORE: {score}")
+                list_scores.append(score)
+                list_min_df.append(min_df)
+                list_max_df_3d.append(max_df)
+                list_min_df_3d.append(min_df)
+                list_scores_3d.append(score)
+            except:
+                print("ERROR")
 
-    print(f"\n\nBEST SCORE: {max_score}\nBEST MAX DF: {best_max_df}\nBEST MIN DF: {best_min_df}")
-    X_train, X_test, y_train, y_test = data_processing.build_train_test_count_vectorized(data=data,
-                                                                                        max_df=best_max_df,
-                                                                                        min_df=best_min_df)
+        dict_acc[max_df] = (list_scores, list_min_df)
 
-    # plt.plot(list_max_df, list_scores)
-    # plt.xlabel("Max DF")
-    # plt.ylabel("Accuracy")
-    # plt.savefig("./2d_nb_max_df")
-    # fig = px.scatter_3d(x=list_max_df, y=list_min_df, z=list_scores)
-    # fig.show()
+    logging.info(f"\n\nBEST SCORE: {max_score}\nBEST MAX DF: {best_max_df}\nBEST MIN DF: {best_min_df}")
 
-    # fig = plt.figure()
-    # # syntax for 3-D projection
-    # ax = plt.axes(projection ='3d')
-    # # ax.plot_trisurf(np.array(list_max_df), np.array(list_min_df), np.array(list_scores),
-    # #                cmap='viridis', edgecolor='green')
-    # # ax.scatter(np.array(list_max_df),
-    # #            np.array(list_min_df),
-    # #            np.array(list_scores),
-    # #            c=np.array(list_scores))
-    # ax.plot3D(list_max_df, list_min_df, list_scores, 'green')
+    for idx, (max_df, (list_scores, list_min_df)) in enumerate(dict_acc.items()):
+        plt.plot(list_min_df, list_scores, label=f"{max_df:.1f} Max DF")
 
-    # ax.set_xlabel('Max DF')
-    # ax.set_ylabel('Min DF')
-    # ax.set_zlabel('Accuracy')
-    # ax.set_title('Naive-Bayes Grid-Search Hyperparameters')
-    # plt.savefig("./3d_nb2")
+    plt.legend()
+    plt.xlabel("Min DF")
+    plt.ylabel("Accuracy")
+    plt.title('Naive-Bayes Grid-Search 2D')
+    plt.savefig("./plots/nb_hyp_tuning/plot_nb_grid_search_2d")
+    plt.close()
+
+    fig = plt.figure()
+    # syntax for 3-D projection
+    ax = plt.axes(projection ='3d')
+    p = ax.scatter(np.array(list_max_df_3d),
+               np.array(list_min_df_3d),
+               np.array(list_scores_3d),
+               c=np.array(list_scores_3d))
+
+    ax.set_xlabel('Max DF')
+    ax.set_ylabel('Min DF')
+    ax.set_zlabel('Accuracy')
+    ax.set_title('Naive-Bayes Grid-Search 3D')
+    cbar = fig.colorbar(p, location='left')
+    cbar.set_label('Acc', rotation=270)
+    plt.savefig("./plots/nb_hyp_tuning/plot_nb_grid_search_3d")
+    plt.close()
 
 
 
@@ -170,15 +183,19 @@ def naive_bayes_classifier(X_train, X_test, y_train, y_test, path_conf_matrix, l
     Returns:
         - score (float): Average accuracy.
     """
+    # X_train_pre_processed = data_processing.pre_process_X(X=X_train)
+    # X_test_pre_processed = data_processing.pre_process_X(X=X_test)
     y_pred, score = train_and_predict_naive_bayes(X_train=X_train,
                                                 X_test=X_test,
                                                 y_train=y_train,
                                                 y_test=y_test)
     if log_metrics:
         logging.info(f"\nNAIVE-BAYES CLASSIFIER")
-        metrics.log_metrics(y=y_test, y_pred=y_pred, path_conf_matrix=path_conf_matrix)
+        avg_acc, avg_precision, avg_recall, avg_f1 = metrics.log_metrics(y=y_test,
+                                                                         y_pred=y_pred,
+                                                                         path_conf_matrix=path_conf_matrix)
 
-    return score
+    return avg_acc, avg_precision, avg_recall, avg_f1
 
 
 
