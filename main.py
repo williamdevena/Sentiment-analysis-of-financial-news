@@ -89,14 +89,6 @@ def main():
 
 
 
-
-
-
-
-
-
-
-
     # ## GRID-SEARCH HYP. TUNING OF NAIVE-BAYES
     data = data_processing.read_ds(agreement_percentage="sentences_50agree")
     baselines.grid_search_tuning_nb(data=data)
@@ -174,7 +166,10 @@ def main():
     metrics.build_and_save_radar_plot(metrics=roberta_metrics,
                                       path_plot=path_radar)
 
-    #logging.info(f"RoBERTa metrics on 50Agree:\n{roberta_metrics["RoBERTa Twitter (50Agree)"]}\n\n\nRoBERTa metrics on AllAgree:\n{roberta_metrics["RoBERTa Twitter (AllAgree)"]}")
+    # results_50 = roberta_metrics["RoBERTa Twitter (50Agree)"]
+    # results_all = roberta_metrics["RoBERTa Twitter (AllAgree)"]
+
+    logging.info(f"RoBERTa metrics:\n{roberta_metrics}")
 
 
 
