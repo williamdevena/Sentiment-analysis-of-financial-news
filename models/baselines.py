@@ -2,17 +2,22 @@ import logging
 
 import matplotlib.pyplot as plt
 import numpy as np
-import plotly.express as px
-import seaborn as sns
 from sklearn import svm
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
+import pandas as pd
 
 from src import data_processing
 from utils import metrics
 
+from typing import Tuple, List
 
-def svm_tf_idf(X_train, X_test, y_train, y_test, path_conf_matrix):
+
+def svm_tf_idf(X_train: np.ndarray,
+               X_test: np.ndarray,
+               y_train: np.ndarray,
+               y_test: np.ndarray,
+               path_conf_matrix: str) -> Tuple[float, float, float, float]:
     """
     Trains a Support Vector Machine (SVM) model using TF-IDF vectorization
     on the training data,makes predictions on the test data, and logs
@@ -45,7 +50,7 @@ def svm_tf_idf(X_train, X_test, y_train, y_test, path_conf_matrix):
 
 
 
-def train_svm(X_train, y_train):
+def train_svm(X_train: np.ndarray, y_train: np.ndarray) -> svm.SVC:
     """
     Trains a Support Vector Machine (SVM) classifier.
 
@@ -63,7 +68,7 @@ def train_svm(X_train, y_train):
 
 
 
-def tf_idf_vectorize(X_train, X_test):
+def tf_idf_vectorize(X_train: List[str], X_test: List[str]) -> Tuple[np.ndarray, np.ndarray]:
     """
     Vectorizes the text data using the TF-IDF vectorizer.
 
@@ -85,7 +90,7 @@ def tf_idf_vectorize(X_train, X_test):
 
 
 
-def grid_search_tuning_nb(data):
+def grid_search_tuning_nb(data: pd.DataFrame) -> None:
     """
     Performs Grid Search Hyperparameter Tuning and returns the best accuracy.
 
@@ -168,7 +173,12 @@ def grid_search_tuning_nb(data):
 
 
 
-def naive_bayes_classifier(X_train, X_test, y_train, y_test, path_conf_matrix, log_metrics=True):
+def naive_bayes_classifier(X_train: np.ndarray,
+                           X_test: np.ndarray,
+                           y_train: np.ndarray,
+                           y_test: np.ndarray,
+                           path_conf_matrix: str,
+                           log_metrics: bool = True) -> Tuple[float, float, float, float]:
     """
     Trains and tests a Naive Bayes classifier on the given data.
 
@@ -202,9 +212,12 @@ def naive_bayes_classifier(X_train, X_test, y_train, y_test, path_conf_matrix, l
 
 
 
-def train_and_predict_naive_bayes(X_train, X_test, y_train, y_test):
+def train_and_predict_naive_bayes(X_train: np.ndarray,
+                                  X_test: np.ndarray,
+                                  y_train: np.ndarray,
+                                  y_test: np.ndarray) -> Tuple[np.ndarray, float]:
     """
-    Trains and tests a Naive Bayes classifier on the given data.
+    Trains a Naive Bayes classifier and makes predictions.
 
     Args:
         - X_train (array): Training data feature matrix.

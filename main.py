@@ -2,13 +2,10 @@ import logging
 import os
 from pprint import pprint
 
-import pandas as pd
 import transformers
-from nltk.sentiment import SentimentIntensityAnalyzer
-from transformers import AutoModelForSequenceClassification
 
-from models import baselines, test, transformers_pipelines
-from src import data_analysis, data_loading, data_processing, pytorch_dataset
+from models import baselines, test
+from src import data_loading, data_processing
 from utils import constants, metrics, setup
 
 

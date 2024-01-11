@@ -1,11 +1,30 @@
 import numpy as np
-from transformers import (AutoModelForSequenceClassification, Trainer,
-                          TrainingArguments)
+from transformers import (AutoModelForSequenceClassification, Trainer)
 
 from utils import metrics
+from typing import Tuple
+from ..src import pytorch_dataset
 
 
-def evaluate_model(model_path, test_ds, fun_compute_metrics, path_cm):
+def evaluate_model(model_path: str,
+                   test_ds: pytorch_dataset.FinancialNewsDataset,
+                   fun_compute_metrics: callable,
+                   path_cm: str) -> Tuple[np.ndarray, dict]:
+    """
+    Evaluates the performance of a specified model on a test dataset.
+
+    Loads a model from a given path, evaluates it on the test dataset, and computes various metrics.
+    It also builds and saves a confusion matrix.
+
+    Args:
+        model_path (str): The file path to the pre-trained model.
+        test_ds (Dataset): The test dataset to be evaluated.
+        fun_compute_metrics (callable): A function to compute evaluation metrics.
+        path_cm (str): File path to save the confusion matrix plot.
+
+    Returns:
+        Tuple[np.ndarray, dict]: Predicted labels and a dictionary containing evaluation metrics.
+    """
     model = AutoModelForSequenceClassification.from_pretrained(model_path, num_labels=3)
     model_trainer = Trainer(
         model=model,

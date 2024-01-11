@@ -7,9 +7,19 @@ import plotly.graph_objects as go
 import seaborn as sns
 from evaluate.visualization import radar_plot
 from sklearn.metrics import confusion_matrix
+from typing import Tuple
 
 
-def compute_metrics(eval_pred):
+def compute_metrics(eval_pred: Tuple[np.ndarray, np.ndarray]) -> dict:
+    """
+    Computes various evaluation metrics for model predictions.
+
+    Args:
+        eval_pred (Tuple[np.ndarray, np.ndarray]): A tuple containing the logits from model predictions and the ground truth labels.
+
+    Returns:
+        dict: A dictionary containing computed metrics such as precision, recall, F1-score, and accuracy.
+    """
     acc = evaluate.load("accuracy")
     precision = evaluate.load("precision")
     recall = evaluate.load("recall")
@@ -27,7 +37,22 @@ def compute_metrics(eval_pred):
 
 
 
-def log_metrics(y, y_pred, path_conf_matrix, log=True):
+def log_metrics(y: np.ndarray,
+                y_pred: np.ndarray,
+                path_conf_matrix: str,
+                log: bool = True) -> Tuple[float, float, float, float]:
+    """
+    Logs metrics and builds a confusion matrix for the predictions.
+
+    Args:
+        y (np.ndarray): Ground truth labels.
+        y_pred (np.ndarray): Predicted labels.
+        path_conf_matrix (str): Path to save the confusion matrix plot.
+        log (bool): If True, logs the metrics.
+
+    Returns:
+        Tuple[float, float, float, float]: Average accuracy, precision, recall, and F1-score.
+    """
     build_and_save_conf_matrix(y_pred=y_pred, y=y, path=path_conf_matrix)
     scores = calculate_metrics(y=y, y_pred=y_pred)
     avg_acc = scores['accuracy']
@@ -44,7 +69,17 @@ def log_metrics(y, y_pred, path_conf_matrix, log=True):
 
 
 
-def build_and_save_radar_plot(metrics, path_plot):
+def build_and_save_radar_plot(metrics: dict, path_plot: str) -> None:
+    """
+    Builds and saves a radar plot for the given metrics.
+
+    Args:
+        metrics (dict): A dictionary containing metrics to be plotted.
+        path_plot (str): File path to save the radar plot.
+
+    Returns:
+        None
+    """
     categories = ['Accuracy', 'Precision', 'Recall', 'F1-score']
 
     fig = go.Figure()
@@ -60,17 +95,17 @@ def build_and_save_radar_plot(metrics, path_plot):
 
 
 
-def build_and_save_conf_matrix(y_pred, y, path):
+def build_and_save_conf_matrix(y_pred: np.ndarray, y: np.ndarray, path: str) -> None:
     """
-    Builds and displays a confusion matrix plot based on the provided true and predicted class labels.
-    If a file path is provided, the plot is saved as an image.
+    Builds and saves a confusion matrix from prediction and ground truth data.
 
     Args:
-        - y_pred (array): Predicted class labels.
-        - y (array): True class labels.
-        - path (str): Optional. File path to save the plot as an image.
+        y_pred (np.ndarray): Predicted labels.
+        y (np.ndarray): Actual labels.
+        path (str): File path to save the confusion matrix plot.
 
-    Returns: None.
+    Returns:
+        None
     """
     cf_matrix = confusion_matrix(y, y_pred)
     sns.heatmap(cf_matrix, annot=True, fmt='g', xticklabels=["neg", "neu", "pos"], yticklabels=["neg", "neu", "pos"])
@@ -78,20 +113,17 @@ def build_and_save_conf_matrix(y_pred, y, path):
         plt.savefig(path)
         plt.close()
 
-def calculate_metrics(y, y_pred):
+def calculate_metrics(y: np.ndarray, y_pred: np.ndarray) -> dict:
     """
-    Calculates accuarcy, recall, precision, and
-    F1-score based on the provided true and predicted class labels.
+    Calculates accuracy, recall, precision, and F1-score based on true and predicted labels.
 
     Args:
-        - y (array): True class labels.
-        - y_pred (array): Predicted class labels.
+        y (np.ndarray): True class labels.
+        y_pred (np.ndarray): Predicted class labels.
 
     Returns:
-        - metrics (dict): A dictionary containing accuracy,
-        recall, precision, and F1-score values for each class label.
+        dict: Dictionary with accuracy, recall, precision, and F1-score.
     """
-
     cm = confusion_matrix(y, y_pred)
     accuracy = np.sum(np.diag(cm)) / np.sum(cm, axis=None)
     recall = np.diag(cm) / np.sum(cm, axis = 1)

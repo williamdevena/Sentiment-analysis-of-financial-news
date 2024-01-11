@@ -1,10 +1,15 @@
 from datasets import DatasetDict, load_dataset
 from transformers import AutoTokenizer
+import transformers
 
 from src.pytorch_dataset import FinancialNewsDataset
+from typing import Tuple
+import pandas as pd
+from typing import List
 
 
-def load_train_test_val_pytorch_ds(agreement, tokenizer_name):
+def load_train_test_val_pytorch_ds(agreement: str,
+                                   tokenizer_name: str) -> Tuple[FinancialNewsDataset, FinancialNewsDataset, FinancialNewsDataset]:
     """
     Load the Financial Phrasebank dataset and split it into train,
     test, and validation sets for PyTorch.
@@ -41,26 +46,7 @@ def load_train_test_val_pytorch_ds(agreement, tokenizer_name):
 
 
 
-
-# def load_fin_phrasebank_ds(agreement):
-#     """
-#     Load the Financial Phrasebank dataset from the Hugging Face hub.
-
-#     Args:
-#         agreement (str): The level of agreement among annotators. Can
-#             be "sentences_allagree" or "sentences_50agree".
-
-#     Returns:
-#         Dataset: A Hugging Face dataset object containing the Financial
-#             Phrasebank dataset.
-#     """
-#     ds = load_dataset("financial_phrasebank", agreement)
-
-#     return ds
-
-
-
-def split_ds(ds):
+def split_ds(ds) -> DatasetDict:
     """
     Split a Hugging Face dataset into train, test, and validation sets.
 
@@ -83,7 +69,7 @@ def split_ds(ds):
 
 
 
-def from_dsdict_to_dataframe(ds_dict):
+def from_dsdict_to_dataframe(ds_dict: DatasetDict) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Convert a DatasetDict object to three Pandas dataframes for
     the train, test, and validation sets.
@@ -103,7 +89,9 @@ def from_dsdict_to_dataframe(ds_dict):
     return df_train, df_test, df_val
 
 
-def build_pytorch_dataset(texts, labels, tokenizer):
+def build_pytorch_dataset(texts: List[str],
+                          labels: List[str],
+                          tokenizer: transformers.PreTrainedTokenizer) -> FinancialNewsDataset:
     """
     Builds a PyTorch dataset from a list of texts and their corresponding labels, using the specified tokenizer
     to tokenize and encode the texts.

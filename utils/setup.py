@@ -4,7 +4,7 @@ import os
 from utils import constants
 
 
-def project_setup():
+def project_setup() -> None:
     """
     Perfomrs initial setups before the execution of the workflow.
     """

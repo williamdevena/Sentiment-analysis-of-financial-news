@@ -4,3 +4,5 @@ glove/*
 *.jpg
 *.png
 *copy.py
+*__pycache__*
+packfile
