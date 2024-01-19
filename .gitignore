@@ -6,3 +6,4 @@ glove/*
 *copy.py
 *__pycache__*
 packfile
+WEIGHTS_ROBERTA/*

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Sentiment analysis of financial news headlines
 
 This GitHub repository provides code and resources for sentiment analysis of financial news. The goal of this project is to analyze financial news articles and classify them as positive, negative, or neutral.
@@ -20,14 +21,19 @@ The RoBERTa model was fine-tuned in two different ways:
 **Attention:** to execute the workflow you need to download the weights of the fine-tuned RoBERTa (check the section below 'Weights for RoBERTa' to see how).
 
 To ensure you have the same development environment as the project, I have provided a **conda** environment file **environment.yml** in the root of the repository. To create the environment and activate it, run the following command:
-
-**conda env create -f environment.yml**
-**conda activate NLP**
+<pre>
+conda env create -f environment.yml
+conda activate NLP
+</pre>
+<!-- **conda env create -f environment.yml**
+**conda activate NLP** -->
 
 To then execute the main workflow, run the following command:
 
-**python main.py**
-
+<!-- **python main.py** -->
+<pre>
+python main.py
+</pre>
 
 ## Repository Structure
 
@@ -44,3 +50,4 @@ The repository is structured as follows:
 The weights for the fine-tuned RoBERTa model are too large to be uploaded to GitHub. Therefore, we have provided a Google Drive link to download a zip file containing the **`WEIGHTS_ROBERTA`** folder. Please download the zip file from the following link, extract its contents, and place the resulting **`WEIGHTS_ROBERTA`** folder in the same directory as **`main.py`**:
 
 **https://drive.google.com/file/d/1EUNRutkLIc0-cp9Bvz7nb3Xb4A9a1h2M/view?usp=share_link**
+
